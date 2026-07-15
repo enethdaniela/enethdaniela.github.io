@@ -1,0 +1,96 @@
+:root {
+    --primary: #6c5ce7;
+    --background: #f5f6fa;
+    --card-bg: #ffffff;
+    --text: #2d3436;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+input, select, button {
+    padding: 10px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+input[type="text"] { flex: 1; min-width: 150px; }
+select { flex: 1; min-width: 120px; }
+
+button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover { opacity: 0.9; }
+
+.btn-danger {
+    background-color: #d63031;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.resultados {
+    margin-top: 20px;
+}
+
+.dia-libre {
+    background: #e8f8f5;
+    padding: 10px;
+    border-left: 4px solid #1abc9c;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.badge {
+    background: #dfe6e9;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: inline-block;
+    margin: 5px;
+}

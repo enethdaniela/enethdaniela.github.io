@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador de Horarios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cuadrar Horarios 📅</h1>
+        
+        <div class="card">
+            <h2>Agregar Clase</h2>
+            <div class="form-group">
+                <input type="text" id="nombre" placeholder="Tu nombre (ej. Daniela)">
+                <select id="dia">
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Inicio:</label>
+                <input type="time" id="hora-inicio">
+                <label>Fin:</label>
+                <input type="time" id="hora-fin">
+                <button onclick="agregarClase()">Añadir</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Usuarios Registrados</h2>
+            <div id="lista-usuarios"></div>
+            <button onclick="limpiarDatos()" class="btn-danger">Borrar Todos los Datos</button>
+        </div>
+
+        <div class="card">
+            <h2>Comparar Horarios Libres</h2>
+            <p>Selecciona a las personas que quieres comparar:</p>
+            <div id="selector-comparacion" class="checkbox-group"></div>
+            <button onclick="compararHorarios()">Buscar Huecos Libres</button>
+            
+            <div id="resultados" class="resultados">
+                <!-- Aquí aparecerán los horarios libres -->
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
