@@ -16,14 +16,11 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
 }
 
-h1 {
-    text-align: center;
-    color: var(--primary);
-}
+h1 { text-align: center; color: var(--primary); }
 
 .card {
     background: var(--card-bg);
@@ -33,64 +30,42 @@ h1 {
     margin-bottom: 20px;
 }
 
-.form-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-input, select, button {
-    padding: 10px;
-    border: 1px solid #dfe6e9;
-    border-radius: 6px;
-    font-size: 16px;
-}
-
-input[type="text"] { flex: 1; min-width: 150px; }
-select { flex: 1; min-width: 120px; }
+.form-group { display: flex; gap: 10px; margin-bottom: 15px; }
+input[type="text"] { flex: 1; padding: 10px; border: 1px solid #dfe6e9; border-radius: 6px; font-size: 16px; }
 
 button {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    padding: 10px 15px; background-color: var(--primary); color: white;
+    border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px;
 }
-
 button:hover { opacity: 0.9; }
 
-.btn-danger {
-    background-color: #d63031;
-    margin-top: 10px;
-    width: 100%;
+.btn-danger { background-color: #d63031; margin-top: 10px; width: 100%; }
+.instruccion { margin-bottom: 10px; font-size: 14px; color: #636e72; }
+
+/* Estilos de la tabla de horarios */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 500px; }
+th, td { border: 1px solid #dfe6e9; padding: 8px; text-align: center; }
+th { background-color: #f1f2f6; font-size: 14px; }
+.td-hora { font-weight: bold; background-color: #f1f2f6; font-size: 13px; white-space: nowrap; }
+
+/* Estilo de los checkboxes grandes */
+input[type="checkbox"].slot-check {
+    width: 20px; height: 20px; cursor: pointer; accent-color: #d63031;
 }
 
-.checkbox-group {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
+.checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
 
-.resultados {
-    margin-top: 20px;
+.badge {
+    background: #dfe6e9; padding: 5px 10px; border-radius: 12px; font-size: 14px;
+    display: inline-block; margin: 5px;
 }
 
 .dia-libre {
-    background: #e8f8f5;
-    padding: 10px;
-    border-left: 4px solid #1abc9c;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c;
+    margin-bottom: 10px; border-radius: 4px;
 }
-
-.badge {
-    background: #dfe6e9;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    display: inline-block;
-    margin: 5px;
+.bloque-libre {
+    display: inline-block; background: #1abc9c; color: white; padding: 4px 8px;
+    border-radius: 4px; margin: 3px; font-size: 13px;
 }
