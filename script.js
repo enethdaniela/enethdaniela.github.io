@@ -1,71 +1,138 @@
-:root {
-    --primary: #6c5ce7;
-    --background: #f5f6fa;
-    --card-bg: #ffffff;
-    --text: #2d3436;
+// Definición de los bloques de tiempo. Puedes agregar o quitar bloques aquí.
+const bloques = [
+    "07:00 - 08:20", "08:30 - 09:50", "10:00 - 11:20", 
+    "11:30 - 12:50", "13:00 - 14:20", "14:30 - 15:50", 
+    "16:00 - 17:20", "17:30 - 18:50"
+];
+const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+let datosHorarios = JSON.parse(localStorage.getItem('horariosPorBloque')) || {};
+
+function inicializarTabla() {
+    const tabla = document.getElementById('tabla-horario');
+    let html = '<tr><th>Hora</th>';
+    dias.forEach(dia => html += `<th>${dia}</th>`);
+    html += '</tr>';
+
+    bloques.forEach((bloque, filaIdx) => {
+        html += `<tr><td class="td-hora">${bloque}</td>`;
+        dias.forEach((dia, colIdx) => {
+            html += `<td><input type="checkbox" class="slot-check" id="slot-${filaIdx}-${colIdx}"></td>`;
+        });
+        html += '</tr>';
+    });
+    tabla.innerHTML = html;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background);
-    color: var(--text);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+function guardarMiHorario() {
+    const nombre = document.getElementById('nombre').value.trim();
+    if (!nombre) {
+        alert("Por favor ingresa tu nombre primero.");
+        return;
+    }
+
+    const horarioOcupado = {};
+    dias.forEach(dia => horarioOcupado[dia] = []);
+
+    bloques.forEach((bloque, filaIdx) => {
+        dias.forEach((dia, colIdx) => {
+            const checkbox = document.getElementById(`slot-${filaIdx}-${colIdx}`);
+            if (checkbox.checked) {
+                horarioOcupado[dia].push(bloque); // Guardamos que está ocupado
+            }
+        });
+    });
+
+    datosHorarios[nombre] = horarioOcupado;
+    localStorage.setItem('horariosPorBloque', JSON.stringify(datosHorarios));
+    
+    alert(`¡Horario de ${nombre} guardado exitosamente!`);
+    document.getElementById('nombre').value = '';
+    
+    // Desmarcar todos los checkboxes para el siguiente usuario
+    document.querySelectorAll('.slot-check').forEach(cb => cb.checked = false);
+    actualizarUI();
 }
 
-.container {
-    max-width: 800px;
-    width: 100%;
+function actualizarUI() {
+    const listaUsuarios = document.getElementById('lista-usuarios');
+    const selector = document.getElementById('selector-comparacion');
+    
+    listaUsuarios.innerHTML = '';
+    selector.innerHTML = '';
+
+    Object.keys(datosHorarios).forEach(nombre => {
+        // Mostrar en lista
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.innerText = nombre;
+        listaUsuarios.appendChild(badge);
+
+        // Agregar al selector
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${nombre}" checked> ${nombre}`;
+        selector.appendChild(label);
+    });
 }
 
-h1 { text-align: center; color: var(--primary); }
-
-.card {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
+function limpiarDatos() {
+    if(confirm("¿Estás segura de borrar todos los horarios?")) {
+        datosHorarios = {};
+        localStorage.setItem('horariosPorBloque', JSON.stringify(datosHorarios));
+        document.getElementById('resultados').innerHTML = '';
+        actualizarUI();
+    }
 }
 
-.form-group { display: flex; gap: 10px; margin-bottom: 15px; }
-input[type="text"] { flex: 1; padding: 10px; border: 1px solid #dfe6e9; border-radius: 6px; font-size: 16px; }
+function compararHorarios() {
+    const checkboxes = document.querySelectorAll('#selector-comparacion input:checked');
+    const seleccionadas = Array.from(checkboxes).map(cb => cb.value);
 
-button {
-    padding: 10px 15px; background-color: var(--primary); color: white;
-    border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px;
+    if (seleccionadas.length < 1) {
+        alert("Selecciona al menos una persona para comparar.");
+        return;
+    }
+
+    const resultadosDiv = document.getElementById('resultados');
+    resultadosDiv.innerHTML = `<h3>Huecos libres en común:</h3>`;
+
+    let huboCoincidencias = false;
+
+    dias.forEach(dia => {
+        let bloquesLibresDelDia = [];
+
+        // Evaluamos cada bloque de tiempo
+        bloques.forEach(bloque => {
+            let bloqueOcupadoPorAlguien = false;
+
+            seleccionadas.forEach(nombre => {
+                if (datosHorarios[nombre][dia].includes(bloque)) {
+                    bloqueOcupadoPorAlguien = true;
+                }
+            });
+
+            // Si nadie lo tiene ocupado, es un hueco libre para el grupo
+            if (!bloqueOcupadoPorAlguien) {
+                bloquesLibresDelDia.push(bloque);
+            }
+        });
+
+        if (bloquesLibresDelDia.length > 0) {
+            huboCoincidencias = true;
+            let htmlBloques = bloquesLibresDelDia.map(b => `<span class="bloque-libre">${b}</span>`).join(' ');
+            resultadosDiv.innerHTML += `
+                <div class="dia-libre">
+                    <strong>${dia}:</strong> <br> ${htmlBloques}
+                </div>
+            `;
+        }
+    });
+
+    if (!huboCoincidencias) {
+        resultadosDiv.innerHTML += `<p>No se encontraron horas libres en común con las personas seleccionadas. 😢</p>`;
+    }
 }
-button:hover { opacity: 0.9; }
 
-.btn-danger { background-color: #d63031; margin-top: 10px; width: 100%; }
-.instruccion { margin-bottom: 10px; font-size: 14px; color: #636e72; }
-
-/* Estilos de la tabla de horarios */
-.table-responsive { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 500px; }
-th, td { border: 1px solid #dfe6e9; padding: 8px; text-align: center; }
-th { background-color: #f1f2f6; font-size: 14px; }
-.td-hora { font-weight: bold; background-color: #f1f2f6; font-size: 13px; white-space: nowrap; }
-
-/* Estilo de los checkboxes grandes */
-input[type="checkbox"].slot-check {
-    width: 20px; height: 20px; cursor: pointer; accent-color: #d63031;
-}
-
-.checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-
-.badge {
-    background: #dfe6e9; padding: 5px 10px; border-radius: 12px; font-size: 14px;
-    display: inline-block; margin: 5px;
-}
-
-.dia-libre {
-    background: #e8f8f5; padding: 10px; border-left: 4px solid #1abc9c;
-    margin-bottom: 10px; border-radius: 4px;
-}
-.bloque-libre {
-    display: inline-block; background: #1abc9c; color: white; padding: 4px 8px;
-    border-radius: 4px; margin: 3px; font-size: 13px;
-}
+// Inicializar la tabla y la UI al cargar la página
+inicializarTabla();
+actualizarUI();
